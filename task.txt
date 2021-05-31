@@ -1,0 +1,156 @@
+                          ━━━━━━━━━━━━━━━━━━━
+                                 Wirusy
+                          ━━━━━━━━━━━━━━━━━━━
+
+
+Zadanie
+══════════
+  Dane o wirusach są dostępne w trzech bazach:
+
+    SimpleDatabase - baza danych przetrzymująca dane w liście
+
+    ExcellDatabase - baza danych przetrzymująca dane w ciągach znaków 
+    oddzielonych średnikiem ';'
+
+    OvercomplicatedDatabase - baza danych przetrzymująca dane w strukturze
+    drzewiastej
+
+    SimpleGenomeDatabase - baza danych przetrzymująca dane o genotypach,
+    które uzupełniają dane o wirusach, podczas odczytywania z ExcellDatabase i SimpleDatabase
+    należy znaleźć odpowiadający genotyp po Id (będzie on unikalny), natomiast
+    w przypadku OvercomplicatedDatabase należy wyszukać genotyp po tagu (może 
+    być wiele genotypów współdzielących tag).
+
+  
+1. Przygotuj klasy/metody pozwalająca na przechodzenie po danych z bazy
+  niezależnie od wybranej bazy (SimpleDatabase/ExcellDatabase/OvercomplicatedDatabase) w taki
+  sposób, że przy przekazaniu danych do klasy MediaOutlet do metody Publish,
+  ta może wypisać pełne dane bez wiedzy o użytej bazie danych oraz bez odnoszenia
+  się do SimpleGenomeDatabase. Rozwiązanie powinno pozwalać w łatwy sposób dodawać
+  bazy danych (w tym SimpleGenomeDatabase)
+
+  Przy odczycie bazy danych należy wykorzystać klasy VirusData oraz GenomeData.
+
+  Zaprezentuj za pomocą klasy MediaOutlet i metody Publish każdej z baz.
+
+  Nie wolno:
+    - zmieniać kodu baz, GenomeData oraz VirusData 
+
+2. Przygotuj klasy/metody pozwalające na filtrowanie danych za pomocą
+  funkcji zwracającej bool i przyjmującej VirusData oraz mapowanie ich
+  za pomocą funkcji zwracającej (nowe) VirusData i przyjmującej VirusData
+  oraz na konkatenację odczytów z bazy. Klasy należy zaimplementować
+  w taki sposób, że nie będzie trzeba zmienić implementacji MediaOutlet 
+  z pierwszego podpunktu. Operacje powinny być niezależne od użytej bazy danych.
+  Powinno być łatwe wymienianie funkcji w mapowaniu i filtrowaniu.
+  Powinno być możliwe operacji kolejno po sobie na przykład złożenie kolejno po sobie:
+    - odfiltrowanie wirusów o DeathRate > 3.0,
+    - zmapowanie wirusów inkrementujące DeathRate o 1, 
+    - odfiltrowanie wirusów o DeathRate < 1.0
+  Należy wykorzystać klasy i metody z 1. podpunktu.
+
+  Zaprezentuj
+    - filtrowanie DeathRate > 15 danych z bazy ExcellDatabase
+    - mapowanie f => new VirusData(f.VirusName, f.DeathRate+10, f.InfectionRate, f.Genomes)
+      i filtr f => f.DeathRate > 15 jednocześnie danych z bazy ExcellDatabase
+    - konkatenecję danych z bazy ExcellDatabase i danych z bazy OvercomplicatedDatabase
+  
+  Nie wolno:
+    - zmieniać klas zaimplementowanych w punkcie pierwszym
+    - implementować operacji wewnątrz MediaOutlet, wywołanie nie powinno się
+      różnić wykonanego w punkcie pierwszym.
+    - implementować oddzielnych funkcji dla różnych baz.
+    - odczytać całej bazy danych i zapisać jej na przykład w liście, a następnie
+    odfiltrować/zmapować
+
+            Przykłady dla ExcellDatabase:
+              - wyjście bez filtrów i mapowań
+                    measles, death rate: 20, infection rate: 90
+                      Genome: ad27bae7-6c53-490b-be32-b924282d7927 ACAC, 16.31512763738405
+                    sars, death rate: 12.321, infection rate: 72.321
+                        Genome: f00c68dd-9544-43e3-9d01-f410409a77bf ACTAG, 54.637822999915954
+                    rubella, death rate: 33.33, infection rate: 1.33
+                        Genome: 3e28f89b-eb0c-4a7e-a291-02394571f526 ACTAG, 10.098471543797512
+                    chickenpox, death rate: 0, infection rate: 100
+                        Genome: 4038abbf-aeb3-4450-9c65-e92e71144d37 ACTAG, 3.4102672261233757
+                    smallpox, death rate: 5, infection rate: 10
+                        Genome: e60ea218-0c25-473f-8956-f3a9d0ef11a3 GACAT, 86.92418252440363
+                    chikungunya, death rate: 1, infection rate: 0
+                        Genome: 902958fa-1a62-4b1a-a71d-ade9ec00f33e ACTAGA, 0.9061809633421622
+
+              - filtr f => f.DeathRate > 15
+                    measles, death rate: 20, infection rate: 90
+                        Genome: f60bac44-1039-4ba5-8241-80c1c756f8b7 ACAC, 16.31512763738405
+                    rubella, death rate: 33.33, infection rate: 1.33
+                        Genome: b7f52670-a991-4a22-9032-7ef13c987ac2 ACTAG, 10.098471543797512
+
+              - mapowanie f => new VirusData(f.VirusName, f.DeathRate+10, f.InfectionRate, f.Genomes)
+                i filtr f => f.DeathRate > 15 jednocześnie
+
+                    measles, death rate: 30, infection rate: 90
+                        Genome: e8ecf68b-ba7e-4a8b-a1ce-8d808b8d5e08 ACAC, 16.31512763738405
+                    sars, death rate: 22.320999999999998, infection rate: 72.321
+                        Genome: 8ce9a3f6-b410-49df-a3b5-4061954497a6 ACTAG, 54.637822999915954
+                    rubella, death rate: 43.33, infection rate: 1.33
+                        Genome: 50a96b03-d9d3-438b-8a24-ed153f12eb32 ACTAG, 10.098471543797512
+
+###################################
+
+Kolejnym etapem zadania jest przygotowanie procesu testowania nowych szczepionek. 
+Przygotowano 3 szczepionki: AvadaVaccine, ReverseVaccine, Vaccinator3000. 
+Zaproponowano 3 rodzaje obiektów testowych: psy, koty, świnie.
+Chcemy sprawdzić ile obiektów testowych przeżyje atak wirusów z bazy SimpleDatabase po zaszczepieniu odpowiednią szczepionką.
+
+
+Każda ze szczepionek oferuje pewną bazową odporność na pewne łańcuchy nukleotydów (Immunity), jednak na każdy z obiektów testowych działa trochę inaczej.
+
+Jeśli łańcuch odporności zawiera w sobie łańcuch wirusa, wówczas obiekt jest odporny na działanie wirusa i przeżywa jego atak. W przeciwnym przypadku umiera.
+Przykładowo jeśli obiekt ma odporność na "ACTAG", to wówczas przeżyje atak wirusa "CTAG", ale nie przeżyje ataku wirusa "ACTG".
+
+Niestety, szczepienie wiąże się również z możliwością śmierci obiektu testowego - każda ze szczepionek ma współczynnik DeathRate.
+
+Poniżej opisany jest sposób działania szczepionek:
+(dla ułatwienia obiekt może być zaszczepiony tylko jedną szczepionką jednocześnie, bazowy obiekt ma pustą bazową odporność)
+
+- AvadaVaccine:
+	- pies: przypisuje psu swoją bazową odporność, nigdy go nie zabija
+	- kot: umiera z szansą DeathRate, przypisuje kotu bazową odporność, pomijając pierwsze 3 nukleotydy.
+	- świnia: zabija świnię
+- ReverseVaccine:
+	Ta szczepionka szybko traci przydatność do podania. Za każdym jej podaniem faktyczne szanse na śmierć obiektu rosną o DeathRate. 
+	Przykładowo przy pierwszym podaniu szanse wynoszą 0, potem DeathRate, potem 2*DeathRate itd.
+
+	- pies: przypisuje psu swoją bazową odporność ale odwróconą, nigdy go nie zabija
+	- kot: zabija kota
+	- świnia: przypisuje świni bazową odporność szczepionki skonkatenowaną z jej odwrotnością. Przykładowo: "CTG" -> "CTG" + "GTC" = "CTGGTC"
+		Świnia umiera zgodnie z aktualną szansą na śmierć.
+
+- Vaccinator3000:
+	Działanie tej szczepionki polega na wielokrotnym losowaniu pojedynczych elementów odporności bazowej oraz konkatenowaniu wylosowanych elementów.
+	- pies: proces losowania przebiega 3000 razy, pies umiera z szansą DeathRate
+	- kot: proces losowania przebiega 300 razy, kot umiera z szansą DeathRate
+	- świnia: proces losowania przebiega 15 razy, świnia umiera z szansą 3*DeathRate
+
+3. Należy uzupełnić implementację klas obiektów testowych oraz szczepionek zgodnie z instrukcją powyżej.
+
+Rozwiązanie powinno pozwalać na łatwe dodanie nowych typów szczepionek.
+Dodanie nowego typu obiektu testowego może wymagać modyfikacji istniejących klas.
+Dodanie nowego typu szczepionki nie powinno wiązać się ze zmodyfikowaniem istniejących już klas.
+
+Należy dodać wydruki kontrolne w przypadku, gdy obiekt testowy umiera podczas szczepienia.
+
+4. Należy uzupełnić funkcję Test() klasy Tester zgodnie z opisem w kodzie.
+Podczas testowania obiektów testowych wirusami należy wykorzystać rozwiązanie z punktu 1.
+
+##############################
+Co wolno
+
+- Dopisywać nowe pola i metody do już istniejących klas/interfejsów;
+- Dodawać nowe klasy (chociaż to niekoniecznie musi się przydać).
+
+##############################
+Czego nie wolno
+
+- Zmieniać modyfikatorów dostępu (public, protected, private) już utworzonych pól/właściwości/metod;
+- Wykorzystywać jawnego sprawdzania typów za pomocą if, switch itp.
+
